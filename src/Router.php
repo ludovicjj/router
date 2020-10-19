@@ -25,22 +25,23 @@ class Router
      */
     public function add(Route $route): self
     {
-        $this->routes[$route->getName()] = $route;
+        $this->routes[] = $route;
 
         return $this;
     }
 
     /**
      * @param string $name
-     * @return Route|null
+     * @throws RouteNotFoundException
+     * @return Route
      */
-    public function get(string $name): ?Route
+    public function get(string $name): Route
     {
         foreach ($this->routes as $route) {
             if ($route->getName() === $name) {
                 return $route;
             }
         }
-        return null;
+        throw new RouteNotFoundException();
     }
 }

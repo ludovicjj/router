@@ -22,6 +22,9 @@ class RouterTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Route::class, $router->getRouteCollection());
     }
 
+    /**
+     * @throws RouteNotFoundException
+     */
     public function testGetRoute(): void
     {
         $router = new Router();

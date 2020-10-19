@@ -1,11 +1,43 @@
 <?php
 
+namespace App\Test;
+
+use App\Route;
+use App\Router;
 use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase
 {
-    public function testAreWorking(): void
+    public function testRouteCollection(): void
     {
-        $this->assertEquals(2, 1+1);
+        $router = new Router();
+        $route = new Route("home", "/", function() {
+            echo 'hello world';
+        });
+
+        $router->add($route);
+
+        $this->assertCount(1, $router->getRouteCollection());
+        $this->assertContainsOnlyInstancesOf(Route::class, $router->getRouteCollection());
+    }
+
+    public function testGetRoute()
+    {
+        $router = new Router();
+        $route = new Route("home", "/", function() {
+            echo 'hello world';
+        });
+        $router->add($route);
+        $this->assertEquals($route, $router->get('home'));
+    }
+
+    public function testNotFoundRoute()
+    {
+        $router = new Router();
+        $route = new Route("home", "/", function() {
+            echo 'hello world';
+        });
+        $router->add($route);
+        $this->assertNull($router->get('contact'));
     }
 }

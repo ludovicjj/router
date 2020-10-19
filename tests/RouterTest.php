@@ -30,7 +30,7 @@ class RouterTest extends TestCase
      * @throws RouteNotFoundException
      * @throws RouteAlreadyExistException
      */
-    public function testGetRoute(): void
+    public function testGetRouteByName(): void
     {
         $router = new Router();
         $route = new Route("home", "/", function() {
@@ -40,14 +40,36 @@ class RouterTest extends TestCase
         $this->assertEquals($route, $router->get('home'));
     }
 
-    public function testRouteNotFoundException(): void
+    /**
+     * @throws RouteAlreadyExistException
+     * @throws RouteNotFoundException
+     */
+    public function testGetRouteByPath(): void
+    {
+        $router = new Router();
+        $route = new Route("home", "/", function() {});
+        $router->add($route);
+        $this->assertEquals($route, $router->match("/"));
+    }
+
+    public function testRouteNotFoundByGet(): void
     {
         $router = new Router();
         $this->expectException(RouteNotFoundException::class);
-        $this->assertNull($router->get('contact'));
+        $router->get('contact');
     }
 
-    public function testRouteAlreadyExistException()
+    public function testRouteNotFoundByMatch(): void
+    {
+        $router = new Router();
+        $this->expectException(RouteNotFoundException::class);
+        $router->match("/");
+    }
+
+    /**
+     * @throws RouteAlreadyExistException
+     */
+    public function testRouteAlreadyExist(): void
     {
         $router = new Router();
         $route = new Route("home", "/", function() {

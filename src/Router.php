@@ -48,10 +48,25 @@ class Router
     }
 
     /**
+     * @param string $path
+     * @return Route
+     * @throws RouteNotFoundException
+     */
+    public function match(string $path): Route
+    {
+        foreach ($this->routes as $route) {
+            if ($route->getPath() === $path) {
+                return $route;
+            }
+        }
+        throw new RouteNotFoundException();
+    }
+
+    /**
      * @param $name
      * @return bool
      */
-    public function has($name): bool
+    private function has($name): bool
     {
         return isset($this->routes[$name]);
     }

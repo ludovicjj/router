@@ -52,6 +52,18 @@ class RouterTest extends TestCase
         $this->assertEquals($route, $router->match("/"));
     }
 
+    /**
+     * @throws RouteAlreadyExistException
+     * @throws RouteNotFoundException
+     */
+    public function testGetRouteByPathWithParameters(): void
+    {
+        $router = new Router();
+        $route = new Route("article", "/blog/{id}/{slug}", function() {});
+        $router->add($route);
+        $this->assertEquals($route, $router->match("/blog/5/my-post"));
+    }
+
     public function testRouteNotFoundByGet(): void
     {
         $router = new Router();

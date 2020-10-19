@@ -55,7 +55,7 @@ class Router
     public function match(string $path): Route
     {
         foreach ($this->routes as $route) {
-            if ($route->getPath() === $path) {
+            if ($route->test($path)) {
                 return $route;
             }
         }

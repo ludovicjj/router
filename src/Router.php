@@ -21,10 +21,14 @@ class Router
 
     /**
      * @param Route $route
+     * @throws RouteAlreadyExistException
      * @return $this
      */
     public function add(Route $route): self
     {
+        if ($this->has($route->getName())) {
+            throw new RouteAlreadyExistException();
+        }
         $this->routes[$route->getName()] = $route;
 
         return $this;

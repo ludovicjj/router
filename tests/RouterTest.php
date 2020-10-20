@@ -6,6 +6,7 @@ use App\Route;
 use App\RouteAlreadyExistException;
 use App\RouteNotFoundException;
 use App\Router;
+use App\Test\Classes\HomeController;
 use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase
@@ -68,7 +69,7 @@ class RouterTest extends TestCase
      * @throws RouteAlreadyExistException
      * @throws RouteNotFoundException
      */
-    public function testCallableContentWithParametersOrdered()
+    public function testClosureContentWithParametersOrdered()
     {
         $router = new Router();
         $routePost = new Route("article", "/blog/{id}/{slug}", function(string $id, string $slug) {
@@ -84,7 +85,7 @@ class RouterTest extends TestCase
      * @throws RouteAlreadyExistException
      * @throws RouteNotFoundException
      */
-    public function testCallableContentWithParametersNoOrdered()
+    public function testClosureContentWithParametersNoOrdered()
     {
         $router = new Router();
         $routePost = new Route("article", "/blog/{id}/{slug}", function(string $slug, string $id) {
@@ -100,12 +101,22 @@ class RouterTest extends TestCase
      * @throws RouteAlreadyExistException
      * @throws RouteNotFoundException
      */
-    public function testCallableContentNoParameters()
+    public function testClosureContentWithNoParameters()
     {
         $router = new Router();
         $route = new Route("home", "/", function() {
             return "home page";
         });
+
+        $router->add($route);
+
+        $this->assertEquals("home page", $router->match("/")->call());
+    }
+
+    public function testMethodContent()
+    {
+        $router = new Router();
+        $route = new Route("home", "/", [HomeController::class, 'index']);
 
         $router->add($route);
 

@@ -20,7 +20,7 @@ class Route
     private $path;
 
     /**
-     * @var callable $callable
+     * @var callable|array $callable
      */
     private $callable;
 
@@ -83,6 +83,9 @@ class Route
 
             $parameters = $this->sortArrayByArray($this->routeParameters, $orderKeyParameters);
         }
+
+        var_dump($this->callable);
+        die;
 
         return call_user_func_array($this->callable, $parameters);
     }

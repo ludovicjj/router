@@ -4,6 +4,7 @@
 namespace App;
 
 
+use phpDocumentor\Reflection\Types\Callable_;
 use ReflectionFunction;
 use ReflectionParameter;
 
@@ -84,10 +85,12 @@ class Route
             $parameters = $this->sortArrayByArray($this->routeParameters, $orderKeyParameters);
         }
 
-        var_dump($this->callable);
-        die;
+        $callable = $this->callable;
+        if (is_array($callable)) {
+            $callable = [new $callable[0](), $callable[1]];
+        }
 
-        return call_user_func_array($this->callable, $parameters);
+        return call_user_func_array($callable, $parameters);
     }
 
     private function sortArrayByArray(array $array, array $orderKeyArray): array

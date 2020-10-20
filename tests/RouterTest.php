@@ -120,7 +120,7 @@ class RouterTest extends TestCase
 
         $router->add($route);
 
-        $this->assertEquals("home page", $router->match("/")->call());
+        $this->assertEquals("Hello world !", $router->match("/")->call());
     }
 
     public function testRouteNotFoundByGet(): void

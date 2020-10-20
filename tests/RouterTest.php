@@ -64,6 +64,54 @@ class RouterTest extends TestCase
         $this->assertEquals($route, $router->match("/blog/5/my-post"));
     }
 
+    /**
+     * @throws RouteAlreadyExistException
+     * @throws RouteNotFoundException
+     */
+    public function testCallableContentWithParametersOrdered()
+    {
+        $router = new Router();
+        $routePost = new Route("article", "/blog/{id}/{slug}", function(string $id, string $slug) {
+            return sprintf('%s : %s', $id, $slug);
+        });
+
+        $router->add($routePost);
+
+        $this->assertEquals("5 : my-post", $router->match("/blog/5/my-post")->call());
+    }
+
+    /**
+     * @throws RouteAlreadyExistException
+     * @throws RouteNotFoundException
+     */
+    public function testCallableContentWithParametersNoOrdered()
+    {
+        $router = new Router();
+        $routePost = new Route("article", "/blog/{id}/{slug}", function(string $slug, string $id) {
+            return sprintf('%s : %s', $id, $slug);
+        });
+
+        $router->add($routePost);
+
+        $this->assertEquals("5 : my-post", $router->match("/blog/5/my-post")->call());
+    }
+
+    /**
+     * @throws RouteAlreadyExistException
+     * @throws RouteNotFoundException
+     */
+    public function testCallableContentNoParameters()
+    {
+        $router = new Router();
+        $route = new Route("home", "/", function() {
+            return "home page";
+        });
+
+        $router->add($route);
+
+        $this->assertEquals("home page", $router->match("/")->call());
+    }
+
     public function testRouteNotFoundByGet(): void
     {
         $router = new Router();

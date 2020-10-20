@@ -24,7 +24,7 @@ class Route
      */
     private $callable;
 
-    private $parameters;
+    private $routeParameters;
 
     public function __construct(
         string $name,
@@ -34,7 +34,7 @@ class Route
         $this->name = $name;
         $this->path = $path;
         $this->callable = $callable;
-        $this->parameters = [];
+        $this->routeParameters = [];
     }
 
     public function getName(): string
@@ -66,25 +66,25 @@ class Route
         // key route parameters
         preg_match_all('/{(\w+)}/', $this->path, $matchesKey);
 
-        $this->parameters = array_combine($matchesKey[1], $matchesValue);
+        $this->routeParameters = array_combine($matchesKey[1], $matchesValue);
 
         return $result;
     }
 
     public function call()
     {
-        if (count ($this->parameters) > 0) {
+        $parameters = [];
+        if (count ($this->routeParameters) > 0) {
 
             $reflection = new ReflectionFunction($this->callable);
             $orderKeyParameters = array_map(function (ReflectionParameter $parameter) {
                 return $parameter->getName();
             }, $reflection->getParameters());
 
-            $parametersOrdered = $this->sortArrayByArray($this->parameters, $orderKeyParameters);
-            return call_user_func_array($this->callable, $parametersOrdered);
+            $parameters = $this->sortArrayByArray($this->routeParameters, $orderKeyParameters);
         }
 
-        return call_user_func_array($this->callable, []);
+        return call_user_func_array($this->callable, $parameters);
     }
 
     private function sortArrayByArray(array $array, array $orderKeyArray): array

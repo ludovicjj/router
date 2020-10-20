@@ -113,7 +113,11 @@ class RouterTest extends TestCase
         $this->assertEquals("home page", $router->match("/")->call());
     }
 
-    public function testMethodContent()
+    /**
+     * @throws RouteAlreadyExistException
+     * @throws RouteNotFoundException
+     */
+    public function testMethodContentNoParameters()
     {
         $router = new Router();
         $route = new Route("home", "/", [HomeController::class, 'index']);

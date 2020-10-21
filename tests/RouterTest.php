@@ -10,6 +10,7 @@ use App\Test\Classes\BarController;
 use App\Test\Classes\FooController;
 use App\Test\Classes\HomeController;
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
 
 class RouterTest extends TestCase
 {
@@ -70,6 +71,7 @@ class RouterTest extends TestCase
     /**
      * @throws RouteAlreadyExistException
      * @throws RouteNotFoundException
+     * @throws ReflectionException
      */
     public function testClosureContentWithParametersOrdered()
     {
@@ -84,6 +86,7 @@ class RouterTest extends TestCase
     }
 
     /**
+     * @throws ReflectionException
      * @throws RouteAlreadyExistException
      * @throws RouteNotFoundException
      */
@@ -100,6 +103,7 @@ class RouterTest extends TestCase
     }
 
     /**
+     * @throws ReflectionException
      * @throws RouteAlreadyExistException
      * @throws RouteNotFoundException
      */
@@ -116,6 +120,7 @@ class RouterTest extends TestCase
     }
 
     /**
+     * @throws ReflectionException
      * @throws RouteAlreadyExistException
      * @throws RouteNotFoundException
      */
@@ -130,6 +135,7 @@ class RouterTest extends TestCase
     }
 
     /**
+     * @throws ReflectionException
      * @throws RouteAlreadyExistException
      * @throws RouteNotFoundException
      */
@@ -142,6 +148,7 @@ class RouterTest extends TestCase
     }
 
     /**
+     * @throws ReflectionException
      * @throws RouteAlreadyExistException
      * @throws RouteNotFoundException
      */

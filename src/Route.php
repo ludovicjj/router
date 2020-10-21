@@ -3,9 +3,8 @@
 
 namespace App;
 
-
-use phpDocumentor\Reflection\Types\Callable_;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionFunction;
 use ReflectionParameter;
 
@@ -44,11 +43,6 @@ class Route
         return $this->name;
     }
 
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
     /**
      * @param string $path
      * @return false|int
@@ -73,6 +67,10 @@ class Route
         return $result;
     }
 
+    /**
+     * @return mixed
+     * @throws ReflectionException
+     */
     public function call()
     {
         $parameters = [];
@@ -99,6 +97,11 @@ class Route
         return call_user_func_array($callable, $parameters);
     }
 
+    /**
+     * @param array $array
+     * @param array $orderKeyArray
+     * @return string[]
+     */
     private function sortArrayByArray(array $array, array $orderKeyArray): array
     {
         $ordered = [];

@@ -5,6 +5,7 @@ namespace App;
 
 
 use phpDocumentor\Reflection\Types\Callable_;
+use ReflectionClass;
 use ReflectionFunction;
 use ReflectionParameter;
 
@@ -77,7 +78,12 @@ class Route
         $parameters = [];
         if (count ($this->routeParameters) > 0) {
 
-            $reflection = new ReflectionFunction($this->callable);
+            if (is_array($this->callable)) {
+                $reflection = (new ReflectionClass($this->callable[0]))->getMethod($this->callable[1]);
+            } else {
+                $reflection = new ReflectionFunction($this->callable);
+            }
+
             $orderKeyParameters = array_map(function (ReflectionParameter $parameter) {
                 return $parameter->getName();
             }, $reflection->getParameters());
@@ -98,7 +104,7 @@ class Route
         $ordered = [];
         foreach ($orderKeyArray as $key) {
             if (array_key_exists($key, $array)) {
-                $ordered[$key] = $array[$key];
+                $ordered[] = $array[$key];
             }
         }
         return $ordered;

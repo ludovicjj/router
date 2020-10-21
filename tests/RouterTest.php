@@ -82,7 +82,7 @@ class RouterTest extends TestCase
 
         $router->add($routePost);
 
-        $this->assertEquals("5 : my-post", $router->match("/blog/5/my-post")->call());
+        $this->assertEquals("5 : my-post", $router->call("/blog/5/my-post"));
     }
 
     /**
@@ -99,7 +99,7 @@ class RouterTest extends TestCase
 
         $router->add($routePost);
 
-        $this->assertEquals("5 : my-post", $router->match("/blog/5/my-post")->call());
+        $this->assertEquals("5 : my-post", $router->call("/blog/5/my-post"));
     }
 
     /**
@@ -116,7 +116,7 @@ class RouterTest extends TestCase
 
         $router->add($route);
 
-        $this->assertEquals("home page", $router->match("/")->call());
+        $this->assertEquals("home page", $router->call("/"));
     }
 
     /**
@@ -131,7 +131,7 @@ class RouterTest extends TestCase
 
         $router->add($route);
 
-        $this->assertEquals("Hello world !", $router->match("/")->call());
+        $this->assertEquals("Hello world !", $router->call("/"));
     }
 
     /**
@@ -144,7 +144,7 @@ class RouterTest extends TestCase
         $router = new Router();
         $route = new Route("bar", "/bar/{message}/{id}", [BarController::class, 'index']);
         $router->add($route);
-        $this->assertEquals("test : 5", $router->match("/bar/test/5")->call());
+        $this->assertEquals("test : 5", $router->call("/bar/test/5"));
     }
 
     /**
@@ -159,7 +159,7 @@ class RouterTest extends TestCase
 
         $router->add($route);
 
-        $this->assertEquals("test : 5", $router->match("/foo/test/5")->call());
+        $this->assertEquals("test : 5", $router->call("/foo/test/5"));
     }
 
     public function testRouteNotFoundByGet(): void

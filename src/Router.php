@@ -4,6 +4,8 @@
 namespace App;
 
 
+use ReflectionException;
+
 class Router
 {
     /**
@@ -60,6 +62,17 @@ class Router
             }
         }
         throw new RouteNotFoundException();
+    }
+
+    /**
+     * @param string $path
+     * @return mixed
+     * @throws RouteNotFoundException
+     * @throws ReflectionException
+     */
+    public function call(string $path)
+    {
+        return $this->match($path)->call();
     }
 
     /**

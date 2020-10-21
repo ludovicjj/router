@@ -76,6 +76,8 @@ class Route
         $parameters = [];
         if (count ($this->routeParameters) > 0) {
 
+            // Make reflectionClass and get method if callable is array
+            // Else make reflectionFunction
             if (is_array($this->callable)) {
                 $reflection = (new ReflectionClass($this->callable[0]))->getMethod($this->callable[1]);
             } else {

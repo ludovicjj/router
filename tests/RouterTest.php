@@ -6,6 +6,7 @@ use App\Route;
 use App\RouteAlreadyExistException;
 use App\RouteNotFoundException;
 use App\Router;
+use App\Test\Classes\BarController;
 use App\Test\Classes\FooController;
 use App\Test\Classes\HomeController;
 use PHPUnit\Framework\TestCase;
@@ -132,10 +133,22 @@ class RouterTest extends TestCase
      * @throws RouteAlreadyExistException
      * @throws RouteNotFoundException
      */
+    public function testMethodContentWithParametersOrdered()
+    {
+        $router = new Router();
+        $route = new Route("bar", "/bar/{message}/{id}", [BarController::class, 'index']);
+        $router->add($route);
+        $this->assertEquals("test : 5", $router->match("/bar/test/5")->call());
+    }
+
+    /**
+     * @throws RouteAlreadyExistException
+     * @throws RouteNotFoundException
+     */
     public function testMethodContentWithParametersUnordered()
     {
         $router = new Router();
-        $route = new Route("foo", "/foo/{bar}/{id}", [FooController::class, 'index']);
+        $route = new Route("foo", "/foo/{message}/{id}", [FooController::class, 'index']);
 
         $router->add($route);
 

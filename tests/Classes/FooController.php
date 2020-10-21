@@ -6,8 +6,8 @@ namespace App\Test\Classes;
 
 class FooController
 {
-    public function index(string $id, string $bar): string
+    public function index(string $id, string $message): string
     {
-        return $bar . ' : ' . $id;
+        return $message . ' : ' . $id;
     }
 }

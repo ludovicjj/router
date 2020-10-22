@@ -7,6 +7,7 @@ use App\RouteAlreadyExistException;
 use App\RouteNotFoundException;
 use App\Router;
 use App\Test\Classes\BarController;
+use App\Test\Classes\BlogController;
 use App\Test\Classes\FooController;
 use App\Test\Classes\HomeController;
 use PHPUnit\Framework\TestCase;
@@ -160,6 +161,17 @@ class RouterTest extends TestCase
         $router->add($route);
 
         $this->assertEquals("test : 5", $router->call("/foo/test/5"));
+    }
+
+    public function testMethodContentWithDefaultParameter()
+    {
+        $router = new Router();
+
+        $routeBlog = (new Route("blog", "/blog/{local}/page/{page}", [BlogController::class, 'index']))
+            ->addDefaults(['page' => 1]);
+
+        $router->add($routeBlog);
+        $this->assertEquals("Current page is : 1", $router->call("/blog/fr/page"));
     }
 
     public function testRouteNotFoundByGet(): void

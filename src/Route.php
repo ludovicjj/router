@@ -25,8 +25,22 @@ class Route
      */
     private $callable;
 
+    /**
+     * @var array
+     */
     private $routeParameters;
 
+    /**
+     * @var array
+     */
+    private $defaults;
+
+    /**
+     * Route constructor.
+     * @param string $name
+     * @param string $path
+     * @param callable|array $callable
+     */
     public function __construct(
         string $name,
         string $path,
@@ -36,11 +50,19 @@ class Route
         $this->path = $path;
         $this->callable = $callable;
         $this->routeParameters = [];
+        $this->defaults = [];
     }
 
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function addDefaults(array $defaults): self
+    {
+        $this->defaults = $defaults;
+
+        return $this;
     }
 
     /**
@@ -52,17 +74,26 @@ class Route
         // transform path into regex
         $pattern = str_replace("/", "\/", $this->path);
         $pattern = sprintf('/^%s$/', $pattern);
-        $pattern = preg_replace('/({\w+})/', '(.+)', $pattern);
 
-        // test if pattern match with given path
+        $pattern = preg_replace_callback('/({\w+})/', function ($match) {
+            $key = substr($match[0], 1, -1);
+            return (array_key_exists($key, $this->defaults)) ? '?(.+)?' : '(.+)';
+        }, $pattern);
+
         $result = preg_match($pattern, $path, $matchesValue);
 
         // value route parameters
         array_shift($matchesValue);
+
         // key route parameters
         preg_match_all('/{(\w+)}/', $this->path, $matchesKey);
 
-        $this->routeParameters = array_combine($matchesKey[1], $matchesValue);
+        // Defaults parameters
+        if ($this->hasDefaults($matchesKey[1], $matchesValue)) {
+            $this->resolveDefaults($matchesKey[1], $matchesValue);
+        } else {
+            $this->routeParameters = array_combine($matchesKey[1], $matchesValue);
+        }
 
         return $result;
     }
@@ -113,5 +144,29 @@ class Route
             }
         }
         return $ordered;
+    }
+
+    /**
+     * @param array $matchesKey
+     * @param array $matchesValue
+     * @return bool
+     */
+    private function hasDefaults(array $matchesKey, array $matchesValue): bool
+    {
+        return count($matchesKey) !== count($matchesValue);
+    }
+
+    /**
+     * @param array $matchesKey
+     * @param array $matchesValue
+     */
+    private function resolveDefaults(array $matchesKey, array $matchesValue): void
+    {
+        foreach ($matchesKey as $key) {
+            if (array_key_exists($key, $this->defaults)) {
+                $matchesValue[] = $this->defaults[$key];
+            }
+        }
+        $this->routeParameters = array_combine($matchesKey, $matchesValue);
     }
 }
